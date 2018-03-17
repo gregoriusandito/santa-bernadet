@@ -1,0 +1,30 @@
+{
+  "name": "santabernadet",
+  "version": "1.0.0",
+  "description": "santa bernadet website",
+  "main": "",
+  "scripts": {
+    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "hot": "NODE_ENV=development webpack-dev-server --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "NODE_ENV=production webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregoriusandito/santa-bernadet.git"
+  },
+  "keywords": [
+    "codeigniter"
+  ],
+  "author": "santa bernadet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gregoriusandito/santa-bernadet/issues"
+  },
+  "homepage": "https://github.com/gregoriusandito/santa-bernadet#readme",
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
+    "laravel-mix": "^2.0.0"
+  }
+}

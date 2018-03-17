@@ -1,0 +1,6 @@
+application/config
+node_modules/
+.c9/
+php.ini
+error_log
+.htaccess
