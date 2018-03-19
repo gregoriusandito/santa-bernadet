@@ -2,8 +2,8 @@
 	$option = $this->db->get('options')->result();
 ?>
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
-<!--[if gt IE 8]><!--><html class="no-js gt-ie8"><!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="id-ID"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js gt-ie8 " lang="id-ID"><!--<![endif]-->
 <head>
 <meta charset="utf-8">
 <title><?= $option[0]->option_value ?></title>
@@ -13,7 +13,7 @@ Meta tags
 =================================-->
 <meta name="description" content="Website Resmi Paroki Santa Bernadet Ciledug">
 <meta content="yes" name="apple-mobile-web-app-capable" />
-<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=yes" />
+<meta name="viewport" content="minimum-scale=1.0, width=device-width, maximum-scale=5, user-scalable=yes" />
 <meta name="theme-color" content="#181818">
 <meta name="author" content="Santa Bernadet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,16 +29,11 @@ endif;
 <!--=================================
 Style Sheets
 =================================-->
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700" rel="stylesheet" type="text/css">
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Hind|Playfair+Display">
 
-<link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/home/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/home/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/home/css/custom.css">
 <link rel="stylesheet" href="<?= base_url() ?>assets/home/css/main.css">
 <!--LOGO-->
 <link rel="icon" href="<?= base_url() ?>assets/home/img/logo/logo-optimized.png" sizes="32x32"/>
@@ -56,7 +51,7 @@ Style Sheets
             <div class="topHeader">
                 <div class="container hidden-xs">
                 	<a href="<?php echo base_url('home'); ?>">
-                    	<img src="<?php echo base_url('uploads/company/banner-web 1.png'); ?>" width="100%" />
+                    	<img class="lazy-hidden" data-lazy-src="<?php echo base_url('uploads/company/banner-web 1.png'); ?>" width="100%" />
                 	</a>
                 </div>
 	            <div class="container header-height-100 visible-xs">
@@ -64,7 +59,7 @@ Style Sheets
 	            		<div class="flex-vertical-center absolute-left">
 	            			<div class="image-container-30 pl-10">
 	            				<a href="<?php echo base_url('home'); ?>">
-	            					<img src="<?php echo base_url('uploads/company/index.jpg'); ?>">
+	            					<img class="lazy-hidden" data-lazy-src="<?php echo base_url('uploads/company/index.jpg'); ?>">
 	            				</a>	
 	            			</div>
 	            		</div>
@@ -259,8 +254,9 @@ if ('serviceWorker' in navigator) {
     });
 }
 </script>
-<script src="<?= base_url() ?>assets/home/js/jquery/dist/jquery.min.js"></script>
-<script src="<?= base_url() ?>assets/home/js/main.js" async></script>
+<script src="<?= base_url() ?>assets/home/js/jquery/dist/jquery.min.js" defer></script>
+<script src="<?= base_url() ?>assets/home/js/main.js" defer></script>
+<script src="<?= base_url() ?>assets/home/js/lazyload.js" defer></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>

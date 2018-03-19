@@ -17,7 +17,7 @@
 									<div class="featured-inner">
 										<a class="rcp-thumb" href="<?php echo base_url('home/post/'.$data_mod[0]->post_id); ?>">
 											<span class="featured-overlay"></span>
-											<img class="img-utama" src="<?= base_url('uploads/'.$data_mod[0]->post_image); ?>" />
+											<img class="img-utama lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$data_mod[0]->post_image); ?>" />
 										</a>
 										<div class="post-panel">
 											<a class="post-tag" href="<?php echo base_url('home/category/'.$data_mod[0]->category_id); ?>"><?= $data_mod[0]->category_title ?></a>
@@ -33,7 +33,7 @@
 									<div class="featured-inner">
 										<a class="rcp-thumb" href="<?php echo base_url('home/post/'.$data_mod[1]->post_id); ?>">
 											<span class="featured-overlay"></span>
-											<img class="img-utama" src="<?= base_url('uploads/'.$data_mod[1]->post_image); ?>" />
+											<img class="img-utama lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$data_mod[1]->post_image); ?>" />
 										</a>
 										<div class="post-panel">
 											<a class="post-tag" href="<?php echo base_url('home/category/'.$data_mod[1]->category_id); ?>"><?= $data_mod[1]->category_title ?></a>
@@ -47,7 +47,7 @@
 									<div class="featured-inner">
 										<a class="rcp-thumb" href="<?php echo base_url('home/post/'.$data_mod[2]->post_id); ?>">
 											<span class="featured-overlay"></span>
-											<img class="img-utama" src="<?= base_url('uploads/'.$data_mod[2]->post_image); ?>" />
+											<img class="img-utama lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$data_mod[2]->post_image); ?>" />
 										</a>
 										<div class="post-panel">
 											<a class="post-tag"><?= $data_mod[2]->category_title ?></a>
@@ -63,7 +63,7 @@
 									<div class="featured-inner">
 										<a class="rcp-thumb" href="<?php echo base_url('home/post/'.$data_mod[3]->post_id); ?>">
 											<span class="featured-overlay"></span>
-											<img class="img-utama" src="<?= base_url('uploads/'.$data_mod[3]->post_image); ?>" />
+											<img class="img-utama lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$data_mod[3]->post_image); ?>" />
 										</a>
 										<div class="post-panel">
 											<a class="post-tag" href="<?php echo base_url('home/category/'.$data_mod[3]->category_id); ?>"><?= $data_mod[3]->category_title ?></a>
@@ -77,7 +77,7 @@
 									<div class="featured-inner">
 										<a class="rcp-thumb" href="<?php echo base_url('home/post/'.$data_mod[4]->post_id); ?>">
 											<span class="featured-overlay"></span>
-											<img class="img-utama" src="<?= base_url('uploads/'.$data_mod[4]->post_image); ?>" />
+											<img class="img-utama lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$data_mod[4]->post_image); ?>" />
 										</a>
 										<div class="post-panel">
 											<a class="post-tag" href="<?php echo base_url('home/category/'.$data_mod[4]->category_id); ?>"><?= $data_mod[4]->category_title ?></a>
@@ -108,7 +108,7 @@
 	                        <div class="col-md-3 col-sm-12 pb-20">
 	                            <figure class="category-item-wrapper margin-0">
 	                                <a class="category-section-link" href="<?= base_url('home/post/'.$liputan->post_id); ?>">
-	                                    <img class="category-figure" src="<?= base_url('uploads/'.$liputan->post_image); ?>" alt="">
+	                                    <img class="category-figure lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$liputan->post_image); ?>" alt="">
 	                                </a>
 	                            </figure>
 	                            <h4 class="category-frontpage-title pt-20 margin-0">
@@ -130,7 +130,7 @@
 	                        <div class="col-md-3 col-sm-12 pb-20">
 	                            <figure class="category-item-wrapper margin-0">
 	                                <a class="category-section-link" href="<?= base_url('home/post/'.$serba_serbi->post_id); ?>">
-	                                    <img class="category-figure" src="<?= base_url('uploads/'.$serba_serbi->post_image); ?>" alt="">
+	                                    <img class="category-figure lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$serba_serbi->post_image); ?>" alt="">
 	                                </a>
 	                            </figure>
 	                            <h4 class="category-frontpage-title pt-20 margin-0">
@@ -152,7 +152,7 @@
 	                        <div class="col-md-3 col-sm-12 pb-20">
 	                            <figure class="category-item-wrapper margin-0">
 	                                <a class="category-section-link" href="<?= base_url('home/post/'.$pengalaman->post_id); ?>">
-	                                    <img class="category-figure" src="<?= base_url('uploads/'.$pengalaman->post_image); ?>" alt="">
+	                                    <img class="category-figure lazy-hidden" data-lazy-src="<?= base_url('uploads/'.$pengalaman->post_image); ?>" alt="">
 	                                </a>
 	                            </figure>
 	                            <h4 class="category-frontpage-title pt-20 margin-0">

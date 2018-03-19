@@ -13,6 +13,7 @@ let mix = require('laravel-mix');
 
 // mix.js('src/app.js', 'dist/')
 mix.js('res/js/home/main.js', 'assets/home/js')
+.js('res/js/home/lazyload.js', 'assets/home/js')
   .sass('res/scss/home/main.scss', 'assets/home/css');
 
 // Full API
