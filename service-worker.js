@@ -16,7 +16,6 @@ limitations under the License.
 
   // TODO 2 - cache the application shell
     var filesToCache = [
-      '.',
       'assets/home/css/main.css',
       'assets/home/js/main.js',
       'assets/home/js/lazyload.js',
@@ -36,7 +35,7 @@ limitations under the License.
     var staticCacheName = 'pages-cache-v1';
     
     self.addEventListener('install', function(event) {
-      console.log('Attempting to install service worker and cache static assets');
+      // console.log('Attempting to install service worker and cache static assets');
       event.waitUntil(
         caches.open(staticCacheName)
         .then(function(cache) {
@@ -46,14 +45,32 @@ limitations under the License.
     });  
 
     self.addEventListener('fetch', function(event) {
-      console.log('Fetch event for ', event.request.url);
+      // console.log('Fetch event for ', event.request.url);
+      
+      var ignoreRequests = new RegExp('(' + [
+        '/administrator',
+        '/administrator\/(.*)', // ignore also IDs
+      ].join('(\/?)|\\') + ')$')
+      /*
+        examples
+        ignoreRequests.test('https://site.com/') // true
+        ignoreRequests.test('https://site.com/any/') // false, will be cached
+        ignoreRequests.test('https://site.com/perfil/123') // true
+      */
+  
+      if (ignoreRequests.test(event.request.url)) {
+        // console.log('ignored: ', event.request.url)
+        // request will be networked
+        return
+      }      
+      
       event.respondWith(
         caches.match(event.request).then(function(response) {
           if (response) {
-            console.log('Found ', event.request.url, ' in cache');
+            // console.log('Found ', event.request.url, ' in cache');
             return response;
           }
-          console.log('Network request for ', event.request.url);
+          // console.log('Network request for ', event.request.url);
           return fetch(event.request)
     
           // TODO 4 - Add fetched files to the cache
@@ -65,7 +82,7 @@ limitations under the License.
               }              
             
               return caches.open(staticCacheName).then(function(cache) {
-                if (event.request.url.indexOf('test') < 0) {
+                if (event.request.url.indexOf('sw-modules') < 0) {
                   cache.put(event.request.url, response.clone());
                 }
                 return response;
@@ -74,28 +91,28 @@ limitations under the License.
     
         }).catch(function(error) {
           // TODO 6 - Respond with custom offline page
-            console.log('Error, ', error);
+            // console.log('Error, ', error);
             return caches.match('sw-modules/offline.html');
         })
       );
     });
 
   // TODO 7 - delete unused caches
-    // self.addEventListener('activate', function(event) {
-    //   console.log('Activating new service worker...');
+    self.addEventListener('activate', function(event) {
+      // console.log('Activating new service worker...');
     
-    //   var cacheWhitelist = [staticCacheName];
+      var cacheWhitelist = [staticCacheName];
     
-    //   event.waitUntil(
-    //     caches.keys().then(function(cacheNames) {
-    //       return Promise.all(
-    //         cacheNames.map(function(cacheName) {
-    //           if (cacheWhitelist.indexOf(cacheName) === -1) {
-    //             return caches.delete(cacheName);
-    //           }
-    //         })
-    //       );
-    //     })
-    //   );
-    // });
+      event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+          return Promise.all(
+            cacheNames.map(function(cacheName) {
+              if (cacheWhitelist.indexOf(cacheName) === -1) {
+                return caches.delete(cacheName);
+              }
+            })
+          );
+        })
+      );
+    });
 })();
