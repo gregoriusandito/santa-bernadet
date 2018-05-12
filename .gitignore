@@ -4,3 +4,4 @@ node_modules/
 php.ini
 error_log
 .htaccess
+github-token.txt

@@ -26,6 +26,7 @@
     "bootstrap": "^4.0.0",
     "jquery": "^3.3.1",
     "laravel-mix": "^2.0.0",
-    "lazyload": "^2.0.0-beta.2"
+    "lazyload": "^2.0.0-beta.2",
+    "npm": "^6.0.1"
   }
 }
