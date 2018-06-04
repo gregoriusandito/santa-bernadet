@@ -5,3 +5,6 @@ php.ini
 error_log
 .htaccess
 github-token.txt
+tokped/
+res/js/tokped
+res/scss/tokped

@@ -109,7 +109,7 @@ class Home extends CI_Controller {
 	        $share_url  =   'whatsapp://send?text=' . $permalink;
 	    endif;
 	
-	    return $share_url;
+	    return htmlspecialchars($share_url);
 	}
 	
 	function sanberna_summon_opengraph_protocol( $title, $image, $desc ) {
