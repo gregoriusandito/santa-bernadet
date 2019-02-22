@@ -26,7 +26,7 @@
 						</div>
 					</div>	
 					<div class="pb-20">	
-						<div class="post-featured-img" style="background-image: url('<?= base_url('uploads/'.$detail->post_image); ?>');"></div>					
+						<img src="<?= base_url('uploads/'.$detail->post_image); ?>" alt="<?php echo $detail->post_title; ?>">
 					</div>
 					<div class="pl-pr-15">
 						<div class="pb-20">
