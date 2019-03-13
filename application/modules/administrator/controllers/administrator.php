@@ -26,18 +26,27 @@ class Administrator extends CI_Controller {
 		// 	return show_error('You must be an administrator to view this page.');
 		// }
 		else
-		{
+		{	
+			$this->data['tinykey'] = $this->akey_generate();
 			$this->data['users'] = $this->ion_auth->user()->row();
 			$this->data['page'] = 'administrator/dashboard';
 			$this->load->view('administrator/index', $this->data);
 		}
 	}
 
+    function akey_generate() {
+        $username = 'Admin@sanberna';
+        $salt = 'iosf98a162s5d#37lFWHJAu926sjmcoGTs9jsb3842C5713FBFC37B99C43A55E8FBFEEFR9u2xQa';
+        $akey = md5($username.$salt);        
+        
+        return $akey;
+    }
+
 	function login(){
 		
 		if($this->input->post()){
-			$email = '';
-			$remember = '';
+			$email = null;
+			$remember = null;
 			
 			$email_raw		=	$this->input->post('identity', TRUE);
 			$password		=	$this->input->post('password', TRUE);
@@ -103,7 +112,7 @@ class Administrator extends CI_Controller {
 		$tables = $this->config->item('tables','ion_auth');
         $identity_column = $this->config->item('identity','ion_auth');
         $this->data['identity_column'] = $identity_column;
-
+		$this->data['tinykey'] = $this->akey_generate();
 		if($this->input->post()){
 
 			////////////////////////////////////////////////////////
@@ -274,68 +283,68 @@ class Administrator extends CI_Controller {
 		}
 	}
 
-	function all_slider(){
-		if (!$this->ion_auth->logged_in()){
-			redirect('administrator/login', 'refresh');
-		}elseif(!$this->ion_auth->is_admin()){
-			return show_error('You must be an administrator to view this page.');
-		}
+	// function all_slider(){
+	// 	if (!$this->ion_auth->logged_in()){
+	// 		redirect('administrator/login', 'refresh');
+	// 	}elseif(!$this->ion_auth->is_admin()){
+	// 		return show_error('You must be an administrator to view this page.');
+	// 	}
 
-		$data['slider'] = $this->db->get('slider')->result();
-		$data['users'] = $this->ion_auth->user()->row();
-		$data['page'] = 'administrator/all_slider';
-		$this->load->view('administrator/index', $data);
-	}
+	// 	$data['slider'] = $this->db->get('slider')->result();
+	// 	$data['users'] = $this->ion_auth->user()->row();
+	// 	$data['page'] = 'administrator/all_slider';
+	// 	$this->load->view('administrator/index', $data);
+	// }
 
-	function new_slider(){
-		if (!$this->ion_auth->logged_in()){
-			redirect('administrator/login', 'refresh');
-		}elseif(!$this->ion_auth->is_admin()){
-			return show_error('You must be an administrator to view this page.');
-		}
+	// function new_slider(){
+	// 	if (!$this->ion_auth->logged_in()){
+	// 		redirect('administrator/login', 'refresh');
+	// 	}elseif(!$this->ion_auth->is_admin()){
+	// 		return show_error('You must be an administrator to view this page.');
+	// 	}
 
-		$data['users'] = $this->ion_auth->user()->row();
-		$data['page'] = 'administrator/new_slider';
-		$this->load->view('administrator/index', $data);
-	}
+	// 	$data['users'] = $this->ion_auth->user()->row();
+	// 	$data['page'] = 'administrator/new_slider';
+	// 	$this->load->view('administrator/index', $data);
+	// }
 
-	function upload_slider(){
-		if (!empty($_FILES)) {
-			$tempFile = $_FILES['file']['tmp_name'];
-			$fileName = time().'_'.$_FILES['file']['name'];
-			$targetPath = getcwd() . '/uploads/slider/';
-			$targetFile = $targetPath . $fileName ;
-			move_uploaded_file($tempFile, $targetFile);
-			// if you want to save in db,where here
-			// with out model just for example
-			// $this->load->database(); // load database
-			$query = $this->db->insert('slider',array('img_slider' => $fileName, 'active' => 1));
-        }
-	}
+	// function upload_slider(){
+	// 	if (!empty($_FILES)) {
+	// 		$tempFile = $_FILES['file']['tmp_name'];
+	// 		$fileName = time().'_'.$_FILES['file']['name'];
+	// 		$targetPath = getcwd() . '/uploads/slider/';
+	// 		$targetFile = $targetPath . $fileName ;
+	// 		move_uploaded_file($tempFile, $targetFile);
+	// 		// if you want to save in db,where here
+	// 		// with out model just for example
+	// 		// $this->load->database(); // load database
+	// 		$query = $this->db->insert('slider',array('img_slider' => $fileName, 'active' => 1));
+ //       }
+	// }
 
-	function delete_slider($id){
-		$this->load->helper("file");
-		if (!$this->ion_auth->logged_in()){
-			redirect('administrator/login', 'refresh');
-		}elseif(!$this->ion_auth->is_admin()){
-			return show_error('You must be an administrator to view this page.');
-		}
+	// function delete_slider($id){
+	// 	$this->load->helper("file");
+	// 	if (!$this->ion_auth->logged_in()){
+	// 		redirect('administrator/login', 'refresh');
+	// 	}elseif(!$this->ion_auth->is_admin()){
+	// 		return show_error('You must be an administrator to view this page.');
+	// 	}
 
-		$slider = $this->db->where('id_slider', $id)->get('slider')->row();
+	// 	$slider = $this->db->where('id_slider', $id)->get('slider')->row();
 
-		$path_to_file = './uploads/slider/'.$slider->img_slider;
+	// 	$path_to_file = './uploads/slider/'.$slider->img_slider;
 
-		if(unlink($path_to_file)) {
-			$delete = $this->m_crud->delete_data($id, 'id_slider', 'slider');
-			if($delete == TRUE){
-				redirect(base_url().'administrator/all_slider');
-			}else{
-				redirect(base_url().'administrator/all_slider');
-			}
-		}else{
-			redirect(base_url().'administrator/all_slider');
-		}
-	}
+	// 	if(unlink($path_to_file)) {
+	// 		$delete = $this->m_crud->delete_data($id, 'id_slider', 'slider');
+	// 		if($delete == TRUE){
+	// 			redirect(base_url().'administrator/all_slider');
+	// 		}else{
+	// 			redirect(base_url().'administrator/all_slider');
+	// 		}
+	// 	}else{
+	// 		redirect(base_url().'administrator/all_slider');
+	// 	}
+	// }
 
 	function options(){
 		if (!$this->ion_auth->logged_in()){
@@ -397,6 +406,13 @@ class Administrator extends CI_Controller {
 	}
 
 	function upload_logo(){
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+		elseif(!$this->ion_auth->is_admin()){
+			return show_error('You must be an administrator to view this page.');
+		}		
+		
 		if (!empty($_FILES)) {
 			$tempFile = $_FILES['file']['tmp_name'];
 			$file_p = explode('.', $_FILES['file']['name']);
@@ -511,7 +527,7 @@ class Administrator extends CI_Controller {
 		// elseif(!$this->ion_auth->is_admin()){
 		// 	return show_error('You must be an administrator to view this page.');
 		// }
-
+		$data['tinykey'] = $this->akey_generate();
 		if($this->input->post()){
 
 			$_POST['post_slug'] = strtolower(url_title($this->input->post('post_title')));
@@ -635,7 +651,7 @@ class Administrator extends CI_Controller {
 
 	function edit_post($id = null)
 	{
-		$dataPosts = $this->m_crud->get_data('*','posts',' INNER JOIN users ON users.id = posts.post_author '.'WHERE post_id = '.$id)->row();;
+		$dataPosts = $this->m_crud->get_data('*','posts',' INNER JOIN users ON users.id = posts.post_author '.'WHERE post_id = '.$id)->row();
 
 		if (!$this->ion_auth->logged_in()){
 			redirect('administrator/login', 'refresh');
@@ -645,7 +661,8 @@ class Administrator extends CI_Controller {
 		} else if(!($this->ion_auth->is_admin() || ($this->ion_auth->user()->row()->id == $dataPosts->post_author))){
 			redirect('administrator/all_post', 'refresh');
 		}
-
+		
+		$data['tinykey'] = $this->akey_generate();
 
 		if($this->input->post()){
 
@@ -732,6 +749,13 @@ class Administrator extends CI_Controller {
 	}
 
 	function _createThumbnail($filename){
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+		elseif(!$this->ion_auth->is_admin()){
+			return show_error('You must be an administrator to view this page.');
+		}		
+		
 		$config['image_library'] = 'gd2';
         $config['source_image']     = "./uploads/" .$filename;
 		$config['new_image'] = './uploads/thumbs/'.$filename;
@@ -745,6 +769,13 @@ class Administrator extends CI_Controller {
     }
 
 	function new_menu(){
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+		elseif(!$this->ion_auth->is_admin()){
+			return show_error('You must be an administrator to view this page.');
+		}
+		$data['tinykey'] = $this->akey_generate();
 		$data['users'] = $this->ion_auth->user()->row();
 		$data['page'] = 'administrator/new_menu';
 		$this->load->view('administrator/index', $data);
@@ -811,7 +842,7 @@ class Administrator extends CI_Controller {
 		}elseif(!$this->ion_auth->is_admin()){
 			return show_error('You must be an administrator to view this page.');
 		}
-
+		$data['tinykey'] = $this->akey_generate();
 		if($this->input->post()){
 
 			$_POST['profile_slug'] = strtolower(url_title($this->input->post('profile_title')));
@@ -1013,7 +1044,7 @@ class Administrator extends CI_Controller {
 		elseif(!$this->ion_auth->is_admin()){
 			return show_error('You must be an administrator to view this page.');
 		}
-
+		$data['tinykey'] = $this->akey_generate();
 		if($this->input->post())
 		{
 			$data = Array(
@@ -1164,6 +1195,7 @@ class Administrator extends CI_Controller {
 				$this->load->view('administrator/index', $data);
 			}
 		} else {
+			$data['tinykey'] = $this->akey_generate();
 			$data['users'] = $this->ion_auth->user()->row();
 			$data['page'] = 'administrator/new_seksi';
 			$this->load->view('administrator/index', $data);
@@ -1334,6 +1366,7 @@ class Administrator extends CI_Controller {
 				$this->load->view('administrator/index', $data);
 			}
 		}else{
+			$data['tinykey'] = $this->akey_generate();
 			$data['users'] = $this->ion_auth->user()->row();
 			$data['page'] = 'administrator/new_kategorial';
 			$this->load->view('administrator/index', $data);
@@ -1500,6 +1533,7 @@ class Administrator extends CI_Controller {
 				$this->load->view('administrator/index', $data);
 			}
 		} else {
+			$data['tinykey'] = $this->akey_generate();
 			$data['users'] = $this->ion_auth->user()->row();
 			$data['page'] = 'administrator/new_pelayanan';
 			$this->load->view('administrator/index', $data);
@@ -1687,7 +1721,7 @@ class Administrator extends CI_Controller {
 				redirect(base_url().'administrator/all_kaj');
 			}
 		}
-
+		$data['tinykey'] = $this->akey_generate();
 		$data['users'] = $this->ion_auth->user()->row();
 		$data['page'] = 'administrator/new_kaj';
 		$this->load->view('administrator/index', $data);
@@ -1827,6 +1861,7 @@ class Administrator extends CI_Controller {
 				$this->load->view('administrator/index', $data);
 			}
 		} else {
+			$data['tinykey'] = $this->akey_generate();
 			$data['users'] = $this->ion_auth->user()->row();
 			$data['page'] = 'administrator/new_new_wilayah';
 			$this->load->view('administrator/index', $data);
@@ -1957,6 +1992,7 @@ class Administrator extends CI_Controller {
 				$this->load->view('administrator/index', $data);
 			}
 		} else {
+			$data['tinykey'] = $this->akey_generate();
 			$data['users'] = $this->ion_auth->user()->row();
 			$data['page'] = 'administrator/new_page';
 			$this->load->view('administrator/index', $data);
