@@ -6,7 +6,7 @@
 					<h2 class="font-45 mobile-font-24 text-transform-none mt-0"><?php echo $detail->post_title; ?></h2>
 				</div>	
 			</div>
-			<div class="row">
+			<div class="row article">
 				<div class="col-sm-8 pb-20 nopadding">
 					<div class="row pb-10 pl-pr-15">
 						<div class="col-sm-12 nopadding mobile-pb-10 mobile-pl-pr-15">
@@ -25,7 +25,7 @@
 							</div>														
 						</div>
 					</div>	
-					<div class="pb-20">	
+					<div class="pb-10 pl-pr-15">	
 						<img src="<?= base_url('uploads/'.$detail->post_image); ?>" alt="<?php echo $detail->post_title; ?>">
 					</div>
 					<div class="pl-pr-15">
