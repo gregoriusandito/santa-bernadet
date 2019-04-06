@@ -1,6 +1,6 @@
 <?php
 
-$title = $results[0]->category_title;
+$title = isset($all_news) ? "Semua Berita" : $results[0]->category_title;
 
 if ( $results ) :
     $results_chunked = array_chunk( $results, 3 );

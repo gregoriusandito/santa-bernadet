@@ -192,25 +192,25 @@ class Home extends CI_Controller {
 		$this->load->view('core', $data);
 	}
 
-	function register_user(){
-		$this->load->library(array('ion_auth'));
-		$username = $this->input->post('first_name');
-		$password = $this->input->post('password');
-		$email = $this->input->post('email');
-		$additional_data = array(
-								'first_name' => $this->input->post('first_name', TRUE),
-								'last_name' => $this->input->post('last_name', TRUE),
-								);
-		$group = array('2'); // Sets user to admin.
+	// function register_user(){
+	// 	$this->load->library(array('ion_auth'));
+	// 	$username = $this->input->post('first_name');
+	// 	$password = $this->input->post('password');
+	// 	$email = $this->input->post('email');
+	// 	$additional_data = array(
+	// 							'first_name' => $this->input->post('first_name', TRUE),
+	// 							'last_name' => $this->input->post('last_name', TRUE),
+	// 							);
+	// 	$group = array('2'); // Sets user to admin.
 
-		if($this->ion_auth->register($username, $password, $email, $additional_data, $group)){
-			$this->session->set_flashdata('registered', 1);
-			redirect(base_url('home'));
-		}else{
-			$this->session->set_flashdata('registered', 0);
-			redirect(base_url('home'));
-		}
-	}
+	// 	if($this->ion_auth->register($username, $password, $email, $additional_data, $group)){
+	// 		$this->session->set_flashdata('registered', 1);
+	// 		redirect(base_url('home'));
+	// 	}else{
+	// 		$this->session->set_flashdata('registered', 0);
+	// 		redirect(base_url('home'));
+	// 	}
+	// }
 
 	function post($id){
 		$title		= $this->post_model->getPostDetailForOG($id)[0]->post_title;
@@ -278,6 +278,52 @@ class Home extends CI_Controller {
 		$data['page'] = 'page/category';
 		$this->load->view('core', $data);
 	}
+
+	// experimental
+	function all_news(){
+		
+		//begin: pagination
+		
+		$category = $this->category_model->getAllNews()->result();
+		
+		$config = array();
+        $config["base_url"] = base_url() . "home/all_news";
+        $config["total_rows"] = $this->category_model->recordCount($category);
+        $config["per_page"] = 9;
+        $config["uri_segment"] = 3;
+        $config["num_links"] = 3;
+        $config["full_tag_open"] = "<ul class='pagination category' role='menubar' aria-label='Pagination'>";
+        $config["full_tag_close"] = "</ul>";
+        $config["next_link"] = "&gt;";
+        $config["next_tag_open"] = "<li>";
+        $config["next_tag_close"] = "</li>";
+        $config["prev_link"] = "&lt;";
+        $config["prev_tag_open"] = "<li>";
+        $config["prev_tag_close"] = "</li>";
+        $config["cur_tag_open"] = "<li class='current'>";
+        $config["cur_tag_close"] = "</li>";
+        $config['num_tag_open'] = "<li>";
+        $config['num_tag_close'] = '</li>';
+
+        $this->pagination->initialize($config);
+
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $data["results"] = $this->category_model->fetchCategory($config["per_page"], $page);
+        $data["links"] = $this->pagination->create_links();
+
+		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
+		$data['kategorial'] = $this->db->query('SELECT * FROM kategorial');
+		$data['seksi'] = $this->db->query('SELECT * FROM seksi');
+		$data['pelayanan'] = $this->db->query('SELECT * FROM pelayanan');
+		$data['wilayah_parent'] = $this->db->query('SELECT * FROM wilayah WHERE wilayah_parent = 0');
+		$data['wilayah'] = $this->db->query('SELECT * FROM new_wilayah ORDER BY wilayah_title ASC');
+		$data['kaj_parent'] = $this->db->query('SELECT * FROM kaj WHERE judul_parent = 0');
+		$data['download'] = $this->db->query('SELECT * FROM posts WHERE category_id = 7 AND post_status = 1');
+		$data['page'] = 'page/category';
+		$data['all_news'] = true;
+		$this->load->view('core', $data);
+	}
+	
 
 	function profile($id){
 		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
@@ -509,48 +555,48 @@ class Home extends CI_Controller {
 		$this->load->view('core', $data);
 	}
 
-	function company(){
-		$option_name = $_GET['option_name'];
-		$this->db->from('options');
-		$this->db->where('option_name', $option_name);
+	// function company(){
+	// 	$option_name = $_GET['option_name'];
+	// 	$this->db->from('options');
+	// 	$this->db->where('option_name', $option_name);
 
-		$query = $this->db->get();
-		if($query->num_rows() > 0){
-			foreach ($query->result() as $row){
-				$data = $row;
-			}
-			echo json_encode($data);
-		}
-	}
+	// 	$query = $this->db->get();
+	// 	if($query->num_rows() > 0){
+	// 		foreach ($query->result() as $row){
+	// 			$data = $row;
+	// 		}
+	// 		echo json_encode($data);
+	// 	}
+	// }
 
-	function lowongan_kerja(){
-		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
-		$data['kategorial'] = $this->db->query('SELECT * FROM kategorial');
-		$data['seksi'] = $this->db->query('SELECT * FROM seksi');
-		$data['pelayanan'] = $this->db->query('SELECT * FROM pelayanan');
-		$data['wilayah_parent'] = $this->db->query('SELECT * FROM wilayah WHERE wilayah_parent = 0');
-		$data['wilayah'] = $this->db->query('SELECT * FROM new_wilayah ORDER BY wilayah_title ASC');
-		$data['kaj_parent'] = $this->db->query('SELECT * FROM kaj WHERE judul_parent = 0');
-		$data['download'] = $this->db->query('SELECT * FROM posts WHERE category_id = 7 AND post_status = 1');
-		$data['loker'] = $this->db->query('SELECT * FROM posts WHERE category_id = 14 AND post_status = 1');
-		$data['page'] = 'page/loker';
-		$this->load->view('core', $data);
-	}
+	// function lowongan_kerja(){
+	// 	$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
+	// 	$data['kategorial'] = $this->db->query('SELECT * FROM kategorial');
+	// 	$data['seksi'] = $this->db->query('SELECT * FROM seksi');
+	// 	$data['pelayanan'] = $this->db->query('SELECT * FROM pelayanan');
+	// 	$data['wilayah_parent'] = $this->db->query('SELECT * FROM wilayah WHERE wilayah_parent = 0');
+	// 	$data['wilayah'] = $this->db->query('SELECT * FROM new_wilayah ORDER BY wilayah_title ASC');
+	// 	$data['kaj_parent'] = $this->db->query('SELECT * FROM kaj WHERE judul_parent = 0');
+	// 	$data['download'] = $this->db->query('SELECT * FROM posts WHERE category_id = 7 AND post_status = 1');
+	// 	$data['loker'] = $this->db->query('SELECT * FROM posts WHERE category_id = 14 AND post_status = 1');
+	// 	$data['page'] = 'page/loker';
+	// 	$this->load->view('core', $data);
+	// }
 
-	function detail_loker(){
-		$post_id = $_GET['post_id'];
-		$this->db->from('posts');
-		// $this->db->join('users','users.id = posts.post_author','LEFT');
-		$this->db->where('posts.post_id', $post_id);
+	// function detail_loker(){
+	// 	$post_id = $_GET['post_id'];
+	// 	$this->db->from('posts');
+	// 	// $this->db->join('users','users.id = posts.post_author','LEFT');
+	// 	$this->db->where('posts.post_id', $post_id);
 
-		$query = $this->db->get();
-		if($query->num_rows() > 0){
-			foreach ($query->result() as $row){
-				$data = $row;
-			}
-			echo json_encode($data);
-		}
-	}
+	// 	$query = $this->db->get();
+	// 	if($query->num_rows() > 0){
+	// 		foreach ($query->result() as $row){
+	// 			$data = $row;
+	// 		}
+	// 		echo json_encode($data);
+	// 	}
+	// }
 
 	public function filter($tag){
 		// $data['filters_kaj'] = $this->db->query('
