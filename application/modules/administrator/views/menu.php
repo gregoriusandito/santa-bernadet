@@ -17,16 +17,27 @@ $menuShow = (!$this->ion_auth->is_admin()) ? 'style="display:none;"' : '';
 				<li <?= $menuShow ?> ><a href="<?= base_url() ?>administrator/all_dph">All DPH</a></li>
 			</ul>
 		</li>
-		<li><a><i class="fa fa-edit"></i> Post <span class="fa fa-chevron-down"></span></a>
+		
+		<!--Berita-->
+		<li <?= $menuShow ?> ><a><i class="fa fa-edit"></i> Post <span class="fa fa-chevron-down"></span></a>
 			<ul class="nav child_menu">
 				<li><a href="<?= base_url() ?>administrator/new_post/index">New Post</a></li>
 				<li><a href="<?= base_url() ?>administrator/all_post">All Post</a></li>
 				<li <?= $menuShow ?> ><a href="<?= base_url() ?>administrator/all_category">All Category</a></li>
 			</ul>
 		</li>
-
+		
+		<!--e-Magazine-->
+		<li <?= $menuShow ?> ><a><i class="fa fa-newspaper-o"></i> e-Magazine <span class="fa fa-chevron-down"></span></a>
+			<ul class="nav child_menu">
+				<li><a href="<?= base_url() ?>administrator/new_emagz/index">New e-Magazine</a></li>
+				<li><a href="<?= base_url() ?>administrator/all_emagz">All e-Magazine</a></li>
+				<li <?= $menuShow ?> ><a href="<?= base_url() ?>administrator/all_category">All Category</a></li>
+			</ul>
+		</li>
+		
 		<!-- Halaman -->
-		<li <?= $menuShow ?> ><a><i class="fa fa-newspaper-o"></i> Halaman <span class="fa fa-chevron-down"></span></a>
+		<li <?= $menuShow ?> ><a><i class="fa fa-file-o"></i> Halaman <span class="fa fa-chevron-down"></span></a>
 			<ul class="nav child_menu">
 				<li><a href="<?= base_url() ?>administrator/new_page">New Halaman</a></li>
 				<li><a href="<?= base_url() ?>administrator/all_page">All Halaman</a></li>

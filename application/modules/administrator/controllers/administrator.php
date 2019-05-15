@@ -14,6 +14,7 @@ class Administrator extends CI_Controller {
 		$this->load->model('crud/profile');
 		$this->load->model('crud/dph');
 		$this->load->model('crud/post');
+		$this->load->model('crud/emagz');
 	}
 
 	// redirect if needed, otherwise display the user list
@@ -498,10 +499,285 @@ class Administrator extends CI_Controller {
 		</script>";
 	}
 
+	function all_emagz(){
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+		else if ($this->ion_auth->is_admin()) {
+			$where = '';
+		}
+		else {
+			$where = 'WHERE post_author = "'.$this->ion_auth->user()->row()->id.'"';
+		}
 
 
+		$data['post'] = $this->m_crud->get_data('*','emagz',' INNER JOIN users ON users.id = emagz.post_author LEFT JOIN categories ON categories.category_id = emagz.category_id '.$where)->result();
+		$data['users'] = $this->ion_auth->user()->row();
+		$data['page'] = 'administrator/all_emagz';
+		$this->load->view('administrator/index', $data);
+	}
+
+	function new_emagz(){
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+		$data['tinykey'] = $this->akey_generate();
+		if($this->input->post()){
+
+			$_POST['post_slug'] = strtolower(url_title($this->input->post('post_title')));
+
+			$this->form_validation->set_rules('post_title', 'Post Title', 'trim|required|xss_clean|is_unique[posts.post_title]');
+			$this->form_validation->set_rules('post_content', 'Post Content', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('post_slug', 'Post Slug Title', 'trim|required|xss_clean|is_unique[posts.post_slug]');
+			$this->form_validation->set_rules('post_tags', 'Post Tags', 'xss_clean');
+
+			if ($this->form_validation->run() == TRUE) {
+				// images
+				$config['upload_path'] = './uploads/';
+				$config['allowed_types'] = 'gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
+				$new_name = time().'_'.$_FILES["file"]['name'];
+				$config['file_name'] = $new_name;
+				$this->load->library('upload', $config);
+				$this->upload->do_upload('file');
+				$uploaded_image = $this->upload->data();
+				
+				// pdf
+				$config_emagz['upload_path'] = './uploads/';
+				$config_emagz['allowed_types'] = 'pdf|gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
+				$emagz_name = time().'_'.$_FILES["emagz_file"]['name'];
+				$config_emagz['file_name'] = $emagz_name;
+				$this->load->library('upload', $config_emagz);
+				$this->upload->do_upload('emagz_file');
+				$uploaded_emagz = $this->upload->data();
+
+				if (!$uploaded_image || !$uploaded_emagz){
+					redirect(base_url().'administrator/new_emagz');
+				}
+				else
+				{
+			
+					$this->_createThumbnail($uploaded_image['file_name']);
+					$data = Array(
+						'category_id' => $this->input->post('category_id', TRUE),
+						'post_slug' => strtolower(url_title($this->input->post('post_title', TRUE))),
+						'post_title' => $this->input->post('post_title', TRUE),
+						'post_content' => $this->input->post('post_content', TRUE),
+						'post_image' => $uploaded_image['file_name'],
+						'post_emagz_url' => $uploaded_emagz['file_name'],
+						'post_title' => $this->input->post('post_title', TRUE),
+						'post_created' => date('Y-m-d H:i:s'),
+						'post_author' => $this->ion_auth->user()->row()->id,
+					);
+
+					$save = $this->m_crud->save_data($data, 'emagz');
+					if($save == TRUE){
+
+    					//additional tags
+    					$tags = $this->input->post('post_tags', TRUE);
+
+    					$idPost = $this->db->insert_id();
+    					$dataTags = Array();
+
+                        if (!empty($tags)) {
+        					foreach ($tags as $tag) {
+        						$dataTags[] = Array(
+        							'post_id' => $idPost,
+        							'tag' => $tag,
+        							'post_asal' => 'post',
+        							);
+        					}
+        					$this->db->insert_batch('posts_tag', $dataTags);
+                        }
+    					//additional tags
+
+						redirect(base_url().'administrator/all_emagz');
+					}else{
+						redirect(base_url().'administrator/all_emagz');
+					}
+				}
+			}
+			else
+			{
+				echo "<script>alert('Gagal menyimpan');
+				</script>";
+				$data['users'] = $this->ion_auth->user()->row();
+				$data['page'] = 'administrator/new_emagz';
+				$this->load->view('administrator/index', $data);
+			}
+		}else{
+			$data['users'] = $this->ion_auth->user()->row();
+			$data['page'] = 'administrator/new_emagz';
+			$this->load->view('administrator/index', $data);
+		}
+	}
+
+	function delete_emagz($id){
+		$this->load->helper("file");
+		$dataPost = $this->emagz->get_one($id);
+
+		if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin() && $this->ion_auth->user()->row()->id !== $dataPost->post_author){
+			redirect(base_url().'administrator/all_emagz', 'refresh');
+		}
 
 
+		if($this->emagz->delete_by_id($id)) {
+			redirect(base_url().'administrator/all_emagz', 'refresh');
+		}
+		else {
+			echo "<script>
+			alert('Gagal Menghapus');
+			// window.location='".base_url()."administrator/all_emagz';
+			</script>";
+		}
+
+	}
+
+	function activate_emagz($id = NULL,$param = NULL){
+		$id = (int) $id;
+		$param = (int) $param;
+
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+		}
+
+		$update = $this->m_crud->update_data($id, 'post_id', ['post_status' => $param], 'emagz');
+		
+		if ($update) {
+			redirect(base_url().'administrator/all_emagz', 'refresh');
+		}
+		
+		echo "<script>
+		alert('Activate failed');
+		window.location='".base_url()."administrator/all_emagz';
+		</script>";
+	}
+
+	function edit_emagz($id = null) {
+		$dataPosts = $this->m_crud->get_data('*','emagz',' INNER JOIN users ON users.id = emagz.post_author '.'WHERE post_id = '.$id)->row();
+
+		// var_dump($dataPosts);
+		if (!$this->ion_auth->logged_in()){
+			redirect('administrator/login', 'refresh');
+
+		} else if(!($this->ion_auth->is_admin() || ($this->ion_auth->user()->row()->id == $dataPosts->post_author))){
+			redirect('administrator/all_emagz', 'refresh');
+		}
+		
+		$data['tinykey'] = $this->akey_generate();
+
+		if($this->input->post()){
+
+			$_POST['post_slug'] = strtolower(url_title($this->input->post('post_title')));
+
+			$this->form_validation->set_rules('post_title', 'Post Title', 'trim|required|xss_clean|is_unique[posts.post_title]');
+			$this->form_validation->set_rules('post_content', 'Post Content', 'trim|required|xss_clean');
+			$this->form_validation->set_rules('post_slug', 'Post Slug Title', 'trim|required|xss_clean|is_unique[posts.post_slug]');
+            $this->form_validation->set_rules('post_tags', 'Post Tags', 'xss_clean');
+
+			if ($this->form_validation->run() == TRUE)
+			{
+				$config['upload_path'] = './uploads/';
+				$config['allowed_types'] = 'gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
+				$new_name = time().'_'.$_FILES["file"]['name'];
+				$config['file_name'] = $new_name;
+				$this->load->library('upload', $config);
+				$this->upload->do_upload('file');
+				$uploaded_image = $this->upload->data();
+
+				$config_emagz['upload_path'] = './uploads/';
+				$config_emagz['allowed_types'] = 'pdf|doc|docx|xls|xlsx|pptx|ppt';
+				$emagz_name = time().'_'.$_FILES["emagz_file"]['name'];
+				$config_emagz['file_name'] = $emagz_name;
+				$this->load->library('upload', $config_emagz);
+				$this->upload->do_upload('emagz_file');
+				if (isset($_FILES['emagz_file']) && !empty($_FILES["emagz_file"]['name'])) {
+					$uploaded_emagz = $this->upload->data();	
+				}
+				
+				$statEmagzUpload = false;
+				$statImageUpload = false;
+
+				if (isset($uploaded_image['file_ext']) && !empty($uploaded_image['file_ext']) ) {
+					$this->_createThumbnail($uploaded_image['file_name']);
+					$statImageUpload = true;
+
+					$path_to_image = '/uploads/'.$dataPosts->post_image;
+
+					$hapus_gambar = unlink($path_to_image);
+					if (!$hapus_gambar) {
+						echo "<script>alert('Gagal menghapus gambar lama'); </script>";
+					}
+
+				}
+
+				if (isset($uploaded_emagz['file_ext']) && !empty($uploaded_emagz['file_ext'])) {
+					$statEmagzUpload = true;
+
+					$path_to_pdf = '/uploads/'.$dataPosts->post_emagz_url;
+
+					$hapus_pdf = unlink($path_to_pdf);
+					if (!$hapus_pdf) {
+						echo "<script>alert('Gagal menghapus pdf lama'); </script>";
+					}
+
+				}
+				
+				$data = Array(
+					'category_id' => $this->input->post('category_id', TRUE),
+					'post_slug' => strtolower(url_title($this->input->post('post_title', TRUE))),
+					'post_title' => $this->input->post('post_title', TRUE),
+					'post_content' => $this->input->post('post_content', TRUE),
+					'post_image' => $statImageUpload ? $uploaded_image['file_name'] : $dataPosts->post_image,
+					'post_emagz_url' => $statEmagzUpload ? $uploaded_emagz['file_name'] : $dataPosts->post_emagz_url,
+					'post_modified' => date('Y-m-d H:i:s'),
+					'post_modifiedby' => $this->ion_auth->user()->row()->id,
+				);
+				
+				$save = $this->m_crud->update_data($id, 'post_id', $data, 'emagz');
+				if($save == TRUE){
+
+    				//additional tags
+    				$tags = $this->input->post('post_tags', TRUE);
+    				
+    				$dataTags = Array();
+
+                    if (!empty($tags)) {
+                    	foreach ($tags as $tag) {
+        				    $dataTags[] = Array(
+        				        'post_id' => $id,
+        				        'tag' => $tag,
+        				        'post_asal' => 'post',
+        				        );
+        				}
+    				    $this->db->insert_batch('posts_tag', $dataTags);
+                    }
+    				//additional tags 
+
+					redirect(base_url().'administrator/all_emagz'); 
+				}else{
+					redirect(base_url().'administrator/edit_emagz/'.$id);
+				}
+
+			}
+			else
+			{
+				echo "<script>alert('Gagal menyimpan'); </script>";
+				$data['users'] = $this->ion_auth->user()->row();
+				$data['page'] = 'administrator/edit_emagz';
+				$data['data_post'] = $dataPosts;
+				$this->load->view('administrator/index', $data);
+				return;
+			}
+		}else{
+			$data['users'] = $this->ion_auth->user()->row();
+			$data['page'] = 'administrator/edit_emagz';
+			$data['data_post'] = $dataPosts;
+			$this->load->view('administrator/index', $data);
+			return;
+		}
+	}
+
+	// New Post
 	function all_post(){
 		if (!$this->ion_auth->logged_in()){
 			redirect('administrator/login', 'refresh');
