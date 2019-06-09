@@ -61,21 +61,23 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
-					<div class="form-group">
-						<label>Category</label>
-						<select id="category_id" name="category_id" required="required" class="form-control">
-							<option value="">- Chose Category -</option>
-							<?php
-								$cat = $this->m_crud->get_data('*','categories','')->result();
-								if($cat){
-									foreach($cat as $row){
-										$option_content = ($data_post->category_id == $row->category_id) ? '<option selected value="'.$row->category_id.'">'.$row->category_title.'</option>' : '<option value="'.$row->category_id.'">'.$row->category_title.'</option>' ;
-										echo $option_content;
+					<?php if ( 1 == 2 ) : ?>
+						<div class="form-group">
+							<label>Category</label>
+							<select id="category_id" name="category_id" required="required" class="form-control">
+								<option value="">- Chose Category -</option>
+								<?php
+									$cat = $this->m_crud->get_data('*','categories','')->result();
+									if($cat){
+										foreach($cat as $row){
+											$option_content = ($data_post->category_id == $row->category_id) ? '<option selected value="'.$row->category_id.'">'.$row->category_title.'</option>' : '<option value="'.$row->category_id.'">'.$row->category_title.'</option>' ;
+											echo $option_content;
+										}
 									}
-								}
-							?>
-						</select>
-					</div>
+								?>
+							</select>
+						</div>
+					<?php endif; ?>
 					<div class="form-group">
 						<label>e-Magazine Content</label>
 						<input type="file" name="emagz_file" />

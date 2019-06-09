@@ -2,7 +2,6 @@
 
 	$data_mod = $latest_post->result();
 	
-// var_dump($kegiatan_mod->result());
 ?>
 
 <section class="main-section">
@@ -95,6 +94,65 @@
 			</div>				
 		</div>
 	</div>	
+</section>
+
+<section class="sanberna-flexbox-container container">
+	<div class="sanberna-box-container emagz-left-box-container flex-child-vertical-center">
+		<div class="sanberna-inner-left-box width-30-percent">
+			<?php if ( empty($emagz->result()) ) : ?>
+				<img class="" src="https://santabernadet.id/uploads/Bulletin EDISI VI NOVEMBER_proof  1_page-0001.jpg">
+			<?php else : 
+				$emagz_clean = $emagz->result();
+			?>
+				<a href="<?= base_url('home/emagz/'.$emagz_clean[0]->post_id) ?>" target="_blank">
+					<img class="" src="<?= base_url('uploads/'.$emagz_clean[0]->post_image) ?>">
+				</a>
+			<?php endif; ?>	
+		</div>
+		<div class="sanberna-inner-right-box width-70-percent">
+			<?php if ( empty($emagz->result()) ) : ?>
+				<div class="pl-25">
+					<p class="text-white fbo-2 line-height-1-8">
+						Nantikan Warta Paroki Ciledug versi Digital. 
+					</p>
+					<p class="text-white font-12 line-height-1-5">
+						Akses Warta Paroki Ciledug melalui komputer, laptop, maupun gadget kesayangan anda dimanapun dan kapanpun
+					</p>
+				</div>
+			<?php else : 
+				$emagz_clean = $emagz->result();
+			?>
+				<div class="pl-25">
+					<p class="text-white fbo-2 line-height-1-8"><?= $emagz_clean[0]->post_title ?></p>
+					<p class="text-white font-12 line-height-1-5"><?= strip_tags($emagz_clean[0]->post_content) ?></p>
+					<div class="sanberna-button-container">
+						<a href="<?= base_url('home/emagz/'.$emagz_clean[0]->post_id) ?>" target="_blank" class="sanberna-button-orange text-center">Baca</a>
+						<a href="<?= base_url('home/all_emagz') ?>" target="_blank" class="sanberna-button-white ml-10 text-center">Lainnya</a>
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>		
+	</div>
+	<div class="sanberna-box-container flex-child-vertical-center sanberna-youtube-right-box-container m-mt-20">
+		<div class="sanberna-inner-left-box width-30-percent">
+			<a href="<?= $option[7]->option_value ?>">
+				<img class="" src="https://santabernadet.id/uploads/komsos-logo.jpg">
+			</a>
+		</div>
+		<div class="sanberna-inner-right-box width-70-percent">
+			<div class="pl-25">
+				<p class="text-white fbo-2 line-height-1-8">
+					Tonton video seputar Paroki Ciledug. 
+				</p>
+				<p class="text-white font-12 line-height-1-5">
+					Kunjungi channel YouTube Paroki Ciledug Gereja Santa Bernadet untuk menonton berbagai dokumentasi kegiatan, serba-serbi Gereja, dan video menarik lainnya.
+				</p>
+				<div class="sanberna-button-container">
+					<a href="<?= $option[7]->option_value ?>" target="_blank" class="sanberna-button-white text-center">Kunjungi</a>
+				</div>
+			</div>
+		</div>		
+	</div>
 </section>
 
 <section class="content-below">
@@ -315,16 +373,16 @@
 							</div>							
 						</div>
 					</div>
-					<!--<div class="pb-20">-->
-					<!--	<h4 class="block-title">-->
-					<!--		<span>Radio KAJ</span>-->
-					<!--	</h4>-->
-					<!--	<audio controls style="width: 100%;">-->
-					<!--	  <source src="http://kaj.onlivestreaming.net:9500/stream" type="audio/ogg">-->
-					<!--	  <source src="http://kaj.onlivestreaming.net:9500/stream" type="audio/mpeg">-->
-					<!--	Your browser does not support the audio element.-->
-					<!--	</audio>-->
-					<!--</div>-->
+					<div class="pb-20">
+						<h4 class="block-title">
+							<span>Radio KAJ</span>
+						</h4>
+						<audio controls style="width: 100%;">
+						  <source src="http://kaj.onlivestreaming.net:9500/stream" type="audio/ogg">
+						  <source src="http://kaj.onlivestreaming.net:9500/stream" type="audio/mpeg">
+						Your browser does not support the audio element.
+						</audio>
+					</div>
 				</div>
 			</div>
 		</div>

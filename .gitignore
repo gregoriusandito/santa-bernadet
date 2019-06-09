@@ -8,3 +8,4 @@ github-token.txt
 tokped/
 res/js/tokped
 res/scss/tokped
+application/modules/administrator/controllers/administrator.php

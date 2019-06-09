@@ -493,6 +493,14 @@ a{
     padding-left: 10px;
 }
 
+.pl-15 {
+    padding-left: 15px;
+}
+
+.pl-25 {
+    padding-left: 25px;
+}
+
 .pl-pr-15 {
     padding-left: 15px;
     padding-right: 15px;
@@ -530,6 +538,19 @@ a{
 }
 .mt-0 {
     margin-top: 0;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.ml-5 {
+    margin-left: 5px;
+}
+
+
+.ml-25 {
+    margin-left: 25px;
 }
 
 .mt-5 {
@@ -2559,7 +2580,7 @@ label{
         border-bottom:1px solid #f1f1f1;
     }
     .mainNav > li.parent > a:after{
-        content: "\ebb1";
+        content: "\2261";
         font-family: 'linea';
         position:absolute;
         right:25px;
@@ -2578,7 +2599,7 @@ label{
         text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
     }
     .mainNav > li.parent.expanded > a:after{
-        content: "\ebb9";
+        content: "\2261";
     }
     .mainNav > li > ul,.mega-xv{
         position:relative;

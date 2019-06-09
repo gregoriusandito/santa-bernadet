@@ -10,7 +10,7 @@
 					<th>No</th>
 					<th>e-Magazine Title</th>
 					<th>Author</th>
-					<th>Category</th>
+					<!--<th>Category</th>-->
 					<th>Created On</th>
 					<th>Status</th>
 					<th>Action</th>
@@ -27,7 +27,7 @@
 								<td><?= $no ?></td>
 								<td><?= $row->post_title ?></td>
 								<td><?= $row->first_name.' '.$row->last_name  ?></td>
-								<td><?= $row->category_title  ?></td>
+								<?php if (1 == 2) : ?> <td><?= $row->category_title  ?></td> <?php endif; ?>
 								<td><?= date('d M Y H:i', strtotime($row->post_created))  ?></td>
 								<td align="center">
 									<?php 

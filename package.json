@@ -27,6 +27,10 @@
     "jquery": "^3.3.1",
     "laravel-mix": "^2.0.0",
     "lazyload": "^2.0.0-beta.2",
-    "npm": "^6.0.1"
+    "npm": "^6.9.0",
+    "pdfobject": "^2.1.1"
+  },
+  "devDependencies": {
+    "pdfjs-dist": "^2.0.943"
   }
 }

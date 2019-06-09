@@ -15,11 +15,13 @@ let mix = require('laravel-mix');
 mix.js('res/js/home/main.js', 'assets/home/js')
 .js('res/js/home/lazyload.js', 'assets/home/js')
   .sass('res/scss/home/main.scss', 'assets/home/css');
-//   .sass('res/scss/tokped/no2.scss', 'tokped/no-2')
+//   mix.sass('res/scss/tokped/no2.scss', 'tokped/no-2')
 //   .sass('res/scss/tokped/no3.scss', 'tokped/css')
 //   .sass('res/scss/tokped/no1.scss', 'tokped/no-1')
+//   .sass('res/scss/tokped/no3-new.scss', 'tokped/no-3-new')
 //   .js('res/js/tokped/no-5.js', 'tokped/no-5')
 //   .js('res/js/tokped/no-6.js', 'tokped/no-6');
+  
 
 // Full API
 // mix.js(src, output);

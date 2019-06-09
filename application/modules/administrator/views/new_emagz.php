@@ -59,29 +59,31 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
-					<div class="form-group">
-						<label>Category</label>
-						<select id="category_id" name="category_id" required="required" class="form-control">
-							<option value="">- Chose Category -</option>
-							<?php
-
-								if ($this->ion_auth->is_admin())
-								{
-									$cat = $this->m_crud->get_data('*','categories','WHERE category_id NOT IN (1,2,9)')->result();
-								}
-								else
-								{
-									$cat = $this->m_crud->get_data('*','categories',' WHERE category_type = 1 AND category_id NOT IN (1,2,9)')->result();
-								}
-
-								if($cat){
-									foreach($cat as $row){
-										echo '<option value="'.$row->category_id.'">'.$row->category_title.'</option>';
+					<?php if ( 1 == 2 ) : ?>
+						<div class="form-group">
+							<label>Category</label>
+							<select id="category_id" name="category_id" required="required" class="form-control">
+								<option value="">- Chose Category -</option>
+								<?php
+	
+									if ($this->ion_auth->is_admin())
+									{
+										$cat = $this->m_crud->get_data('*','categories','WHERE category_id NOT IN (1,2,9)')->result();
 									}
-								}
-							?>
-						</select>
-					</div>
+									else
+									{
+										$cat = $this->m_crud->get_data('*','categories',' WHERE category_type = 1 AND category_id NOT IN (1,2,9)')->result();
+									}
+	
+									if($cat){
+										foreach($cat as $row){
+											echo '<option value="'.$row->category_id.'">'.$row->category_title.'</option>';
+										}
+									}
+								?>
+							</select>
+						</div>
+					<?php endif; ?>
 					<div class="form-group">
 						<label>e-Magazine Content</label>
 						<input type="file" name="emagz_file" required/>

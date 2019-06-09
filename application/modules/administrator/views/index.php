@@ -175,6 +175,7 @@
 
         external_filemanager_path:"<?= base_url() ?>assets/admin/filemanager/",
         filemanager_title:"Responsive Filemanager" ,
+        filemanager_access_key:"<?= $tinykey ?>",
         external_plugins: { "filemanager" : "<?= base_url() ?>assets/admin/filemanager/plugin.min.js"},
         // valid_elements :"a[href|target=_blank],strong,u,p,iframe[src|frameborder|style|scrolling|class|width|height|name|align]",
         extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align]",

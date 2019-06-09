@@ -32,12 +32,10 @@ class Post extends CI_Model {
 		$this->db->from('posts');
 		$this->db->where('post_id', $id);
 		$data = $this->db->get()->row();
-		// print_r($data);
 
 		$path_to_file = './uploads/'.$data->post_image;
-		// echo $path_to_file;die;
 
-		if(unlink($path_to_file)) {
+		if (unlink($path_to_file) || empty($data->post_image)) {
 			$this->db->from('posts');
 			$this->db->where('post_id', $id);
 			$delete = $this->db->delete(); 
@@ -46,7 +44,7 @@ class Post extends CI_Model {
 			}else{
 				return false;
 			}
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -56,7 +54,7 @@ class Post extends CI_Model {
 	 * All Update Query
 	 * @param string $value [description]
 	 */
-	function set_status($id = null,$param = null)
+	function set_status($id = null, $param = null)
 	{
 		$_POST['post_status'] = $param;
 
@@ -69,7 +67,8 @@ class Post extends CI_Model {
 			$this->db->update('posts');
 			return true;
 		} 
-		echo validation_errors();die;
+		echo validation_errors();
+		die;
 	}
 
 

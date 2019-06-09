@@ -26,6 +26,8 @@ class Home extends CI_Controller {
 		$this->load->model("kaj_model");
 		$this->load->model("post_model");
 		$this->load->model("category_model");
+		$this->load->model("emagz_model");
+		
 	}
 	
 	function error_404(){
@@ -175,7 +177,8 @@ class Home extends CI_Controller {
 		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
 		$data['kegiatan'] = $this->db->query('SELECT * FROM posts WHERE category_id = 15 AND post_status = 1 LIMIT 8');
 		$data['latest_post'] = $this->db->query('SELECT * FROM posts p JOIN categories cat ON (p.category_id = cat.category_id) WHERE p.post_status = 1 AND cat.category_id NOT IN (4,6,7) ORDER BY p.post_created DESC LIMIT 5');
-
+		$data['option'] = $this->db->get('options')->result();
+		$data['emagz'] = $this->db->query('SELECT * FROM emagz WHERE post_status = 1 ORDER BY post_created DESC LIMIT 1');
 		// if($this->input->post()){
 		// 	$remember = (bool) $this->input->post('remember', TRUE);
 		// 	if ($this->ion_auth->login($this->input->post('identity', TRUE), $this->input->post('password', TRUE), $remember)){
@@ -233,6 +236,30 @@ class Home extends CI_Controller {
 		$data['twit_share']	=	$this->sanberna_get_share_url('twitter', $title);
 		$data['wa_share']	=	$this->sanberna_get_share_url('whatsapp', $title);
 		$data['page'] = 'page/post';
+		$this->load->view('core', $data);
+	}
+
+	function emagz($id){
+		$title		= $this->emagz_model->getEmagzDetailForOG($id)[0]->post_title;
+		$image		= $this->emagz_model->getEmagzDetailForOG($id)[0]->post_image;
+		$desc		= $this->sanberna_cut_long_text($this->emagz_model->getEmagzDetailForOG($id)[0]->post_content);
+		
+		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
+		$data['kategorial'] = $this->db->query('SELECT * FROM kategorial');
+		$data['seksi'] = $this->db->query('SELECT * FROM seksi');
+		$data['pelayanan'] = $this->db->query('SELECT * FROM pelayanan');
+		$data['wilayah_parent'] = $this->db->query('SELECT * FROM wilayah WHERE wilayah_parent = 0');
+		$data['wilayah'] = $this->db->query('SELECT * FROM new_wilayah ORDER BY wilayah_title ASC');
+		$data['kaj_parent'] = $this->db->query('SELECT * FROM kaj WHERE judul_parent = 0');
+		$data['download'] = $this->db->query('SELECT * FROM posts WHERE category_id = 7 AND post_status = 1');
+		$data['get_emagz'] = $this->emagz_model->getEmagz($id);
+		$data['date'] = $this->sanberna_readable_date( $this->emagz_model->getEmagzDate($id)->post_created, 'date-month-year' );
+		$data['og']	=	$this->sanberna_summon_opengraph_protocol($title, $image, $desc);
+		$data['card']	=	$this->sanberna_summon_twitter_card($title, $image, $desc);
+		$data['fb_share']	=	$this->sanberna_get_share_url('facebook', $title);
+		$data['twit_share']	=	$this->sanberna_get_share_url('twitter', $title);
+		$data['wa_share']	=	$this->sanberna_get_share_url('whatsapp', $title);
+		$data['page'] = 'page/emagz';
 		$this->load->view('core', $data);
 	}
 
@@ -324,6 +351,50 @@ class Home extends CI_Controller {
 		$this->load->view('core', $data);
 	}
 	
+	// experimental
+	function all_emagz(){
+		
+		//begin: pagination
+		
+		$bulk = $this->category_model->getAllEmagz()->result();
+		
+		$config = array();
+        $config["base_url"] = base_url() . "home/all_emagz";
+        $config["total_rows"] = $this->category_model->recordCount($bulk);
+        $config["per_page"] = 9;
+        $config["uri_segment"] = 3;
+        $config["num_links"] = 3;
+        $config["full_tag_open"] = "<ul class='pagination category' role='menubar' aria-label='Pagination'>";
+        $config["full_tag_close"] = "</ul>";
+        $config["next_link"] = "&gt;";
+        $config["next_tag_open"] = "<li>";
+        $config["next_tag_close"] = "</li>";
+        $config["prev_link"] = "&lt;";
+        $config["prev_tag_open"] = "<li>";
+        $config["prev_tag_close"] = "</li>";
+        $config["cur_tag_open"] = "<li class='current'>";
+        $config["cur_tag_close"] = "</li>";
+        $config['num_tag_open'] = "<li>";
+        $config['num_tag_close'] = '</li>';
+
+        $this->pagination->initialize($config);
+
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $data["results"] = $this->category_model->fetchAllEmagz($config["per_page"], $page);
+        $data["links"] = $this->pagination->create_links();
+
+		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
+		$data['kategorial'] = $this->db->query('SELECT * FROM kategorial');
+		$data['seksi'] = $this->db->query('SELECT * FROM seksi');
+		$data['pelayanan'] = $this->db->query('SELECT * FROM pelayanan');
+		$data['wilayah_parent'] = $this->db->query('SELECT * FROM wilayah WHERE wilayah_parent = 0');
+		$data['wilayah'] = $this->db->query('SELECT * FROM new_wilayah ORDER BY wilayah_title ASC');
+		$data['kaj_parent'] = $this->db->query('SELECT * FROM kaj WHERE judul_parent = 0');
+		$data['download'] = $this->db->query('SELECT * FROM posts WHERE category_id = 7 AND post_status = 1');
+		$data['page'] = 'page/all_emagz';
+		$data['title'] = "Semua Warta Paroki Ciledug";
+		$this->load->view('core', $data);
+	}
 
 	function profile($id){
 		$data['profile'] = $this->db->query('SELECT * FROM profile WHERE profile_status = 1');
