@@ -3,6 +3,7 @@
 		<?php foreach($get_kaj->result() as $detail) { ?>
 		<header class="head text-center"><h3 class="mt-0"><?php echo $detail->judul_folder; ?></h3></header>
 		<div class="row">
+			<?php if (1==2) : ?>
 			<div class="col-sm-12">
 
 				<?php $tag = $this->db->query('SELECT posts_tag.tag FROM posts_tag INNER JOIN kaj ON kaj.id_kaj = posts_tag.post_id WHERE posts_tag.post_asal = "kaj" AND posts_tag.post_id = '.$detail->id_kaj.'')->result();
@@ -20,6 +21,8 @@
 				 ?>
 
 			</div>
+			<?php endif; ?>
+			
 			<div class="col-sm-12">
 				<?php echo $detail->isi_content; ?>
 			</div>
