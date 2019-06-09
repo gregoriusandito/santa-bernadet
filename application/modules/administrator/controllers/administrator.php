@@ -511,7 +511,8 @@ class Administrator extends CI_Controller {
 		}
 
 
-		$data['post'] = $this->m_crud->get_data('*','emagz',' INNER JOIN users ON users.id = emagz.post_author LEFT JOIN categories ON categories.category_id = emagz.category_id '.$where)->result();
+		// $data['post'] = $this->m_crud->get_data('*','emagz',' INNER JOIN users ON users.id = emagz.post_author LEFT JOIN categories ON categories.category_id = emagz.category_id '.$where)->result();
+		$data['post'] = $this->m_crud->get_data('*','emagz',' INNER JOIN users ON users.id = emagz.post_author '.$where)->result();
 		$data['users'] = $this->ion_auth->user()->row();
 		$data['page'] = 'administrator/all_emagz';
 		$this->load->view('administrator/index', $data);
@@ -534,21 +535,19 @@ class Administrator extends CI_Controller {
 			if ($this->form_validation->run() == TRUE) {
 				// images
 				$config['upload_path'] = './uploads/';
-				$config['allowed_types'] = 'gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
-				$new_name = time().'_'.$_FILES["file"]['name'];
+				$config['allowed_types'] = 'pdf|gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
+				$new_name = time().'_emagz';
 				$config['file_name'] = $new_name;
 				$this->load->library('upload', $config);
 				$this->upload->do_upload('file');
 				$uploaded_image = $this->upload->data();
 				
 				// pdf
-				$config_emagz['upload_path'] = './uploads/';
-				$config_emagz['allowed_types'] = 'pdf|gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
-				$emagz_name = time().'_'.$_FILES["emagz_file"]['name'];
-				$config_emagz['file_name'] = $emagz_name;
-				$this->load->library('upload', $config_emagz);
 				$this->upload->do_upload('emagz_file');
-				$uploaded_emagz = $this->upload->data();
+				
+				if (isset($_FILES['emagz_file']) && !empty($_FILES["emagz_file"]['name'])) {
+					$uploaded_emagz = $this->upload->data();	
+				}				
 
 				if (!$uploaded_image || !$uploaded_emagz){
 					redirect(base_url().'administrator/new_emagz');
@@ -558,7 +557,7 @@ class Administrator extends CI_Controller {
 			
 					$this->_createThumbnail($uploaded_image['file_name']);
 					$data = Array(
-						'category_id' => $this->input->post('category_id', TRUE),
+						'category_id' => 1,
 						'post_slug' => strtolower(url_title($this->input->post('post_title', TRUE))),
 						'post_title' => $this->input->post('post_title', TRUE),
 						'post_content' => $this->input->post('post_content', TRUE),
@@ -677,18 +676,14 @@ class Administrator extends CI_Controller {
 			if ($this->form_validation->run() == TRUE)
 			{
 				$config['upload_path'] = './uploads/';
-				$config['allowed_types'] = 'gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
-				$new_name = time().'_'.$_FILES["file"]['name'];
+				$config['allowed_types'] = 'pdf|gif|jpg|jpeg|png|doc|docx|xls|xlsx|pptx|ppt';
+				// $new_name = time().'_'.$_FILES["file"]['name'];
+				$new_name = time().'_emagz_'.$dataPosts->post_id;
 				$config['file_name'] = $new_name;
 				$this->load->library('upload', $config);
 				$this->upload->do_upload('file');
 				$uploaded_image = $this->upload->data();
 
-				$config_emagz['upload_path'] = './uploads/';
-				$config_emagz['allowed_types'] = 'pdf|doc|docx|xls|xlsx|pptx|ppt';
-				$emagz_name = time().'_'.$_FILES["emagz_file"]['name'];
-				$config_emagz['file_name'] = $emagz_name;
-				$this->load->library('upload', $config_emagz);
 				$this->upload->do_upload('emagz_file');
 				if (isset($_FILES['emagz_file']) && !empty($_FILES["emagz_file"]['name'])) {
 					$uploaded_emagz = $this->upload->data();	
@@ -701,7 +696,7 @@ class Administrator extends CI_Controller {
 					$this->_createThumbnail($uploaded_image['file_name']);
 					$statImageUpload = true;
 
-					$path_to_image = '/uploads/'.$dataPosts->post_image;
+					$path_to_image = './uploads/'.$dataPosts->post_image;
 
 					$hapus_gambar = unlink($path_to_image);
 					if (!$hapus_gambar) {
@@ -713,7 +708,7 @@ class Administrator extends CI_Controller {
 				if (isset($uploaded_emagz['file_ext']) && !empty($uploaded_emagz['file_ext'])) {
 					$statEmagzUpload = true;
 
-					$path_to_pdf = '/uploads/'.$dataPosts->post_emagz_url;
+					$path_to_pdf = './uploads/'.$dataPosts->post_emagz_url;
 
 					$hapus_pdf = unlink($path_to_pdf);
 					if (!$hapus_pdf) {
@@ -723,7 +718,7 @@ class Administrator extends CI_Controller {
 				}
 				
 				$data = Array(
-					'category_id' => $this->input->post('category_id', TRUE),
+					'category_id' => 1,
 					'post_slug' => strtolower(url_title($this->input->post('post_title', TRUE))),
 					'post_title' => $this->input->post('post_title', TRUE),
 					'post_content' => $this->input->post('post_content', TRUE),
@@ -2016,7 +2011,9 @@ class Administrator extends CI_Controller {
 		if (!$kaj) {
 			return show_error('Data tidak ditemukan.');
 		}
-
+		
+		$data['tinykey'] = $this->akey_generate();
+		
 		if($this->input->post())
 		{
 			$data = Array(
@@ -2036,21 +2033,21 @@ class Administrator extends CI_Controller {
 			if($save == TRUE){
 
 					//additional tags
-					$tags = $this->input->post('post_tags', TRUE);
-					$deleteTags = $this->post->delete_all_posts_tag($id);
-					$dataTags = Array();
+					// $tags = $this->input->post('post_tags', TRUE);
+					// $deleteTags = $this->post->delete_all_posts_tag($id);
+					// $dataTags = Array();
 
-									if (!empty($tags)) {
-										foreach ($tags as $tag) {
-									$dataTags[] = Array(
-											'post_id' => $id,
-											'tag' => $tag,
-											'post_asal' => 'kaj',
-											);
-							}
-							$this->db->insert_batch('posts_tag', $dataTags);
-									}
-					//additional tags
+					// 				if (!empty($tags)) {
+					// 					foreach ($tags as $tag) {
+					// 				$dataTags[] = Array(
+					// 						'post_id' => $id,
+					// 						'tag' => $tag,
+					// 						'post_asal' => 'kaj',
+					// 						);
+					// 		}
+					// 		$this->db->insert_batch('posts_tag', $dataTags);
+					// 				}
+					// //additional tags
 
 				redirect(base_url().'administrator/all_kaj');
 			}else{
