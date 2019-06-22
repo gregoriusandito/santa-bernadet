@@ -994,6 +994,10 @@ div.clear {
     font-family: 'PT Sans', sans-serif;
 }
 
+.pr {
+  position: relative !important;
+}
+
 .text-transform-none {
     text-transform: none !important;
 }

@@ -18,6 +18,16 @@ Meta tags
 <meta name="author" content="Santa Bernadet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-124438993-1"></script>-->
+<!--<script>-->
+<!--  window.dataLayer = window.dataLayer || [];-->
+<!--  function gtag(){dataLayer.push(arguments);}-->
+<!--  gtag('js', new Date());-->
+
+<!--  gtag('config', 'UA-124438993-1');-->
+<!--</script>-->
+
 <?php
 
 if ( isset($og) && isset($card) ) :
@@ -40,6 +50,17 @@ Style Sheets
 <link rel="icon" href="<?= base_url() ?>assets/home/img/logo/logo-optimized.png" sizes="192x192"/>
 <link rel="apple-touch-icon-precomposed" href="<?= base_url() ?>assets/home/img/logo/logo-optimized.png"/>
 <meta name="msapplication-TileImage" content="<?= base_url() ?>assets/home/img/logo/logo-optimized.png"/>
+
+<!--<link rel="manifest" href="/manifest.json" />-->
+<!--<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>-->
+<!--<script>-->
+<!--  var OneSignal = window.OneSignal || [];-->
+<!--  OneSignal.push(function() {-->
+<!--    OneSignal.init({-->
+<!--      appId: "916e5ebe-8c05-40aa-b956-0ba6f8e0b535",-->
+<!--    });-->
+<!--  });-->
+<!--</script>-->
 
 </head>
 <body>
@@ -89,12 +110,12 @@ Style Sheets
 						?>
 						</ul>
 	                </li>
-					<li class="megaparent"><a href="#">Kaj</a>
-	                    <div class="mega-xv mega-black">
+					<li class="megaparent pr"><a href="#">Kaj</a>
+	                    <div class="mega-xv sanberna-desktop-menu-size">
 	                        <div class="container">
 	                            <div class="row">
 									<?php foreach($kaj_parent->result() as $parent) { ?>
-										<div class="col-xs-12 col-md-3">
+										<div class="col-xs-12 col-md-12">
 											<a href="<?php echo base_url('home/kaj/'.$parent->id_kaj.''); ?>"><h6><?php echo $parent->judul_folder ?></h6></a>
 											<ul>
 												<?php
@@ -208,7 +229,7 @@ Style Sheets
 							<span class="footer-address">Komplek Barata</span> 
 							<span class="footer-address">Jl. Barata Raya No.32,</span> 
 							<span class="footer-address">Karang Tengah, Tangerang 15157</span> 
-							<span class="footer-address">Phone: 021-7306550 021-7311885</span> 
+							<span class="footer-address">Phone: 021-7306550 021-7311855</span> 
 							<span class="footer-address">Fax: 021-7338483</span>
                     	</div>
                         <?php if( 1==2 ) : ?>
@@ -242,18 +263,18 @@ Style Sheets
 <!--====================
  Scripts
 ====================-->
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js')
-    .then(function(registration) {
-      console.log('Service Worker registration successful with scope: ',
-      registration.scope);
-    })
-    .catch(function(err) {
-      console.log('Service Worker registration failed: ', err);
-    });
-}
-</script>
+<!--<script>-->
+<!--if ('serviceWorker' in navigator) {-->
+<!--  navigator.serviceWorker.register('service-worker.js')-->
+<!--    .then(function(registration) {-->
+<!--      console.log('Service Worker registration successful with scope: ',-->
+<!--      registration.scope);-->
+<!--    })-->
+<!--    .catch(function(err) {-->
+<!--      console.log('Service Worker registration failed: ', err);-->
+<!--    });-->
+<!--}-->
+<!--</script>-->
 <script src="<?= base_url() ?>assets/home/js/jquery/dist/jquery.min.js" defer></script>
 <script src="<?= base_url() ?>assets/home/js/main.js" defer></script>
 <script src="<?= base_url() ?>assets/home/js/lazyload.js" defer></script>

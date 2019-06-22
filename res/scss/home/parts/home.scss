@@ -97,6 +97,16 @@
     word-break: break-word;
 }
 
+@media (min-width: 768px) {
+
+    .sanberna-desktop-menu-size {
+        max-width: 300px;
+        width: auto;
+    }
+    
+}
+
+
 @media (max-width: 767px){
     
     .sanberna-box-container {
