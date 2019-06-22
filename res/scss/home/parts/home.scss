@@ -102,6 +102,8 @@
     .sanberna-desktop-menu-size {
         max-width: 300px;
         width: auto;
+        height: 100vh;
+        overflow-y: auto;        
     }
     
 }
